@@ -2,14 +2,7 @@
 
 Automated end-to-end tests for the George AT banking platform, focused on validating the transaction search functionality using Cypress v14+ with Cucumber and Gherkin (BDD).
 
-The suite demonstrates:
-• Stable automation of a real banking UI
-• Session-based login to avoid repeated login steps
-• Custom Cypress commands
-• Handling infinite scroll
-• Search scenarios + edge cases
-• BDD approach with Cucumber and Gherkin feature files
-• Executable Gherkin scenarios with step definitions
+The suite demonstrates stable automation of a real banking UI using BDD approach with Cucumber and Gherkin, including session-based login, custom Cypress commands, infinite scroll handling, and comprehensive search scenarios with edge cases.
 
 ⸻
 
@@ -111,60 +104,29 @@ These tests are not required but were added to demonstrate deeper QA ability:
 
 ▶️ Running the Tests
 
-Open Cypress UI:
-
 ```bash
+# Open Cypress UI
 npm run test:open
-# or
-npx cypress open
-```
 
-Run all BDD feature tests (recommended):
-
-```bash
+# Run all BDD feature tests (recommended)
 npm test
-# or
-npm run test:feature
-# or
-npx cypress run --spec "cypress/features/**/*.feature"
-```
 
-Run full suite (includes legacy .cy.js tests):
-
-```bash
+# Run full suite (includes legacy .cy.js tests)
 npm run test:headless
-# or
-npx cypress run
-```
 
-Run specific feature file:
-
-```bash
+# Run specific feature file
 npx cypress run --spec "cypress/features/search-fashion.feature"
 ```
 
 🧩 Cucumber & Gherkin Integration
 
-This project uses **@badeball/cypress-cucumber-preprocessor** which is fully compatible with Cypress v14+.
-
-**Feature Files:**
-All test scenarios are written in Gherkin syntax and stored in `cypress/features/`. These are executable test files, not just documentation.
-
-**Step Definitions:**
-Step definitions are located in `cypress/features/search/common.js` and implement all the Gherkin steps used across feature files.
+This project uses **@badeball/cypress-cucumber-preprocessor** (compatible with Cypress v14+). All test scenarios are written in Gherkin syntax and stored in `cypress/features/` as executable test files. Step definitions are located in `cypress/features/search/common.js` and implement all Gherkin steps used across feature files.
 
 **Configuration:**
 
-- Cucumber preprocessor is configured in `cypress.config.js`
-- Step definitions path is configured in `package.json` under `cypress-cucumber-preprocessor`
+- Cucumber preprocessor configured in `cypress.config.js`
+- Step definitions path in `package.json` under `cypress-cucumber-preprocessor`
 - Uses `nonGlobalStepDefinitions: true` for co-located step definitions
-
-**Benefits:**
-
-- Human-readable test scenarios
-- Separation of test logic (features) from implementation (step definitions)
-- Easy collaboration between technical and non-technical team members
-- Reusable step definitions across multiple scenarios
 
 ⸻
 
@@ -175,49 +137,19 @@ This approach ensures functional correctness, consistency, UI/UX compliance, and
 
 ### 1. Understanding Requirements and Expected Behavior
 
-Before creating or executing tests, I analyze:
-
-- search input behavior (case sensitivity, trimming, normalization),
-- matching logic for text-based search,
-- infinite scroll loading and pagination behavior,
-- display rules for result lists and empty states,
-- interaction behavior when clearing or updating the search term.
-
-This understanding helps ensure that test scenarios reflect real user workflows and business expectations.
+Before creating or executing tests, I analyze search input behavior (case sensitivity, normalization), matching logic, infinite scroll behavior, display rules for results and empty states, and interaction behavior when clearing/updating search terms. This ensures test scenarios reflect real user workflows and business expectations.
 
 ### 2. Designing Manual Test Scenarios
 
 I break the functionality into scenario groups:
 
-#### **Positive Scenarios**
+**Positive Scenarios:** Valid keyword searches, substring/partial-word searches, proper result ordering and counts, full dataset loading via infinite scroll.
 
-- Searching with valid keywords (e.g., “Fashion”)
-- Substring and partial-word searches
-- Proper result ordering and counts
-- Full dataset loading via infinite scroll
+**Negative Scenarios:** Invalid inputs, unsupported formats, extremely long strings, searches on empty data sets.
 
-#### **Negative Scenarios**
+**Edge Cases:** Case normalization ("FASHION", "faShIoN", "fashion" → same results), leading/trailing spaces, multiple consecutive spaces, special characters (#, %, /, -, $), fast repeated searches.
 
-- Invalid inputs
-- Unsupported formats
-- Extremely long strings
-- Search performed on empty data sets (if applicable)
-
-#### **Edge Cases**
-
-- Case normalization (e.g., “FASHION”, “faShIoN”, “fashion” → same results)
-- Leading/trailing spaces
-- Multiple consecutive spaces
-- Special characters (#, %, /, -, $)
-- Fast repeated searches
-
-#### **UI/UX Scenarios**
-
-- Placeholder visibility and consistency
-- Loading indicators during scroll
-- “No results” behavior
-- Clear/reset button behavior
-- Scroll restoration and list rendering integrity
+**UI/UX Scenarios:** Placeholder visibility, loading indicators during scroll, "no results" behavior, clear/reset button behavior, scroll restoration and list rendering integrity.
 
 ### 3. Writing Manual Test Cases
 
@@ -279,35 +211,6 @@ All test cases are written clearly, so they can be executed even by someone with
 | 19     | Verify the category badge displays "Fashion" for the random transaction           | Random transaction also shows "Fashion" badge        |
 | 20     | Close the transaction details                                                     | Modal closes, test complete                          |
 
-**Expected Results:**
-
-- Search field opens successfully when trigger button is clicked
-- Search field accepts and displays the typed keyword "Fashion"
-- Search executes successfully after pressing Enter
-- Search results summary displays within 15 seconds
-- Summary shows a count greater than 0 (e.g., "5 transactions found")
-- Infinite scroll loads additional transactions when scrolling down
-- All available transactions are loaded (no more appear after full scroll)
-- Loaded transaction count exactly matches the summary count
-- First transaction opens successfully and displays details
-- First transaction has a category badge showing "Fashion"
-- Random transaction opens successfully and displays details
-- Random transaction has a category badge showing "Fashion"
-- All displayed transactions contain the "Fashion" category badge
-- No errors or crashes occur during the test execution
-
-**Postconditions:**
-
-- Search field can be cleared or reset
-- User remains on the Overview page
-- No data corruption or session issues
-
-**Notes:**
-
-- If summary count is 0, verify that "no results" message is displayed instead
-- If transactions fail to load via scroll, verify network connectivity and retry
-- Screenshot should be taken if any step fails for bug reporting
-
 #### Quick Manual Test Checklist
 
 For rapid validation of core search functionality, use this checklist:
@@ -360,28 +263,6 @@ For rapid validation of core search functionality, use this checklist:
 - [ ] Modal/overlay closes properly
 - [ ] Category badges match search keyword
 
-### 4. Manual Test Execution
+### 4. Test Execution & Documentation
 
-While executing the scenarios, I verify:
-
-- Search result correctness
-- Whether infinite scroll loads all available results
-- Stability when switching search terms rapidly
-- Consistency of UI components (badges, timestamps, layout)
-- Correct behavior of clear/reset features
-- Robustness across various edge inputs
-
-All observed issues are tracked for potential reporting.
-
-### 5. Documenting Findings (Bug Reporting)
-
-If a defect is identified, I document:
-
-- exact steps to reproduce
-- expected vs actual behavior
-- environment details
-- screenshots or videos if needed
-
-I then perform both **retest** and **focused regression** after fixes.
-
-This ensures high confidence in the stability and correctness of the search functionality.
+During execution, I verify search result correctness, infinite scroll behavior, stability with rapid search term switching, UI component consistency, and robustness across edge inputs. All issues are tracked with exact reproduction steps, expected vs actual behavior, environment details, and screenshots/videos. After fixes, I perform retest and focused regression to ensure high confidence in search functionality stability.
