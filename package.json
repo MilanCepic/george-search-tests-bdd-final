@@ -1,0 +1,23 @@
+{
+  "name": "george-search-tests",
+  "version": "1.0.0",
+  "description": "Automated tests for George banking transaction search (Cypress + Cucumber)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MilanCepic/george-search-tests.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MilanCepic/george-search-tests/issues"
+  },
+  "homepage": "https://github.com/MilanCepic/george-search-tests#readme",
+  "devDependencies": {
+    "cypress": "^14.1.0"
+  }
+}
