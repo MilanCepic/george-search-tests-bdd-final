@@ -92,8 +92,7 @@ The scenario is written in Gherkin syntax and executed via Cucumber preprocessor
 
 ➕ Additional Scenarios (Bonus)
 
-These tests are not required but were added to demonstrate deeper QA ability:
-• Case normalization (“FASHION”, “fAsHiOn”, “fashion”)
+• Case normalization ("FASHION", "fAsHiOn", "fashion")
 • Search typo (“Fashionn”) → no results
 • Empty search → full results list
 • Clear search → X button resets UI
