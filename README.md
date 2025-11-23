@@ -1,6 +1,6 @@
 # George Transaction Search – Cypress Automation Suite
 
-Automated end-to-end tests for the George AT banking platform, focused on validating the transaction search functionality using Cypress v14+ (JavaScript).
+Automated end-to-end tests for the George AT banking platform, focused on validating the transaction search functionality using Cypress v14+ with Cucumber and Gherkin (BDD).
 
 The suite demonstrates:
 • Stable automation of a real banking UI
@@ -8,15 +8,29 @@ The suite demonstrates:
 • Custom Cypress commands
 • Handling infinite scroll
 • Search scenarios + edge cases
-• Optional Gherkin feature files for documentation
+• BDD approach with Cucumber and Gherkin feature files
+• Executable Gherkin scenarios with step definitions
+
+⸻
+
+📦 Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Verify installation
+npm test
+```
 
 ⸻
 
 🚀 Tech Stack
 • Cypress v14+
 • JavaScript (ES6)
-• Mocha test runner
-• Gherkin features (documentation only)
+• Cucumber (via @badeball/cypress-cucumber-preprocessor)
+• Gherkin feature files (executable)
+• esbuild (for bundling)
 
 ⸻
 
@@ -26,7 +40,7 @@ The suite demonstrates:
 cypress/
 ├── e2e/
 │ └── search/
-│ ├── search-fashion.cy.js ← MAIN TEST (required by assignment)
+│ ├── search-fashion.cy.js ← Legacy Cypress tests (kept for reference)
 │ ├── search-case-normalization.cy.js
 │ ├── search-clear-results.cy.js
 │ ├── search-empty.cy.js
@@ -34,21 +48,23 @@ cypress/
 │ ├── search-special-characters.cy.js
 │ └── search-typo.cy.js
 │
-├── features/ # optional BDD documentation
-│ search-fashion.feature
-│ search-case-normalization.feature
-│ search-clear-results.feature
-│ search-empty.feature
-│ search-preset.feature
-│ search-special-characters.feature
-│ search-typo.feature
+├── features/ # BDD feature files (executable with Cucumber)
+│ ├── search/
+│ │ └── common.js ← Step definitions for all features
+│ ├── search-fashion.feature ← MAIN TEST (required by assignment)
+│ ├── search-case-normalization.feature
+│ ├── search-clear-results.feature
+│ ├── search-empty.feature
+│ ├── search-preset.feature
+│ ├── search-special-characters.feature
+│ └── search-typo.feature
 │
 ├── support/
-│ commands.js # login + helpers
-│ e2e.js
+│ ├── commands.js # login + helpers
+│ └── e2e.js
 │
 ├── fixtures/
-│ example.json
+│ └── example.json
 │
 cypress.config.js
 package.json
@@ -71,11 +87,13 @@ cy.visitOverview();
 
 ⭐ Main Automated Scenario (Required by Assignment)
 
-📄 search-fashion.cy.js
+📄 search-fashion.feature
 
-Covers the exact acceptance criteria: 1. Open search 2. Enter “Fashion” 3. Read summary count 4. Lazy-load all results 5. Verify:
+Covers the exact acceptance criteria using BDD approach: 1. Open search 2. Enter "Fashion" 3. Read summary count 4. Lazy-load all results 5. Verify:
 • loaded count == summary count
-• first + random transaction contain “Fashion” badge
+• first + random transaction contain "Fashion" badge
+
+The scenario is written in Gherkin syntax and executed via Cucumber preprocessor.
 
 ⸻
 
@@ -96,23 +114,54 @@ These tests are not required but were added to demonstrate deeper QA ability:
 Open Cypress UI:
 
 ```bash
+npm run test:open
+# or
 npx cypress open
 ```
 
-Run full suite:
+Run all BDD feature tests (recommended):
 
 ```bash
+npm test
+# or
+npm run test:feature
+# or
+npx cypress run --spec "cypress/features/**/*.feature"
+```
+
+Run full suite (includes legacy .cy.js tests):
+
+```bash
+npm run test:headless
+# or
 npx cypress run
 ```
 
-Run only search suite:
+Run specific feature file:
 
 ```bash
-npx cypress run --spec "cypress/e2e/search/**/*.cy.js"
+npx cypress run --spec "cypress/features/search-fashion.feature"
 ```
 
-🧩 Gherkin Feature Files (Optional)
+🧩 Cucumber & Gherkin Integration
 
-Cucumber is not used, because the official plugin is not compatible with Cypress v14+.
-However, feature files are included for documentation, stored under:
-cypress/features/
+This project uses **@badeball/cypress-cucumber-preprocessor** which is fully compatible with Cypress v14+.
+
+**Feature Files:**
+All test scenarios are written in Gherkin syntax and stored in `cypress/features/`. These are executable test files, not just documentation.
+
+**Step Definitions:**
+Step definitions are located in `cypress/features/search/common.js` and implement all the Gherkin steps used across feature files.
+
+**Configuration:**
+
+- Cucumber preprocessor is configured in `cypress.config.js`
+- Step definitions path is configured in `package.json` under `cypress-cucumber-preprocessor`
+- Uses `nonGlobalStepDefinitions: true` for co-located step definitions
+
+**Benefits:**
+
+- Human-readable test scenarios
+- Separation of test logic (features) from implementation (step definitions)
+- Easy collaboration between technical and non-technical team members
+- Reusable step definitions across multiple scenarios
