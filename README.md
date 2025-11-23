@@ -165,3 +165,223 @@ Step definitions are located in `cypress/features/search/common.js` and implemen
 - Separation of test logic (features) from implementation (step definitions)
 - Easy collaboration between technical and non-technical team members
 - Reusable step definitions across multiple scenarios
+
+⸻
+
+## 📝 Manual Testing Approach for Transaction Search
+
+Below is my structured methodology for manually testing the Transaction Search functionality in the George platform.  
+This approach ensures functional correctness, consistency, UI/UX compliance, and validation of all edge-case scenarios.
+
+### 1. Understanding Requirements and Expected Behavior
+
+Before creating or executing tests, I analyze:
+
+- search input behavior (case sensitivity, trimming, normalization),
+- matching logic for text-based search,
+- infinite scroll loading and pagination behavior,
+- display rules for result lists and empty states,
+- interaction behavior when clearing or updating the search term.
+
+This understanding helps ensure that test scenarios reflect real user workflows and business expectations.
+
+### 2. Designing Manual Test Scenarios
+
+I break the functionality into scenario groups:
+
+#### **Positive Scenarios**
+
+- Searching with valid keywords (e.g., “Fashion”)
+- Substring and partial-word searches
+- Proper result ordering and counts
+- Full dataset loading via infinite scroll
+
+#### **Negative Scenarios**
+
+- Invalid inputs
+- Unsupported formats
+- Extremely long strings
+- Search performed on empty data sets (if applicable)
+
+#### **Edge Cases**
+
+- Case normalization (e.g., “FASHION”, “faShIoN”, “fashion” → same results)
+- Leading/trailing spaces
+- Multiple consecutive spaces
+- Special characters (#, %, /, -, $)
+- Fast repeated searches
+
+#### **UI/UX Scenarios**
+
+- Placeholder visibility and consistency
+- Loading indicators during scroll
+- “No results” behavior
+- Clear/reset button behavior
+- Scroll restoration and list rendering integrity
+
+### 3. Writing Manual Test Cases
+
+Each test case includes:
+
+- Unique test ID
+- Title
+- Preconditions
+- Detailed step-by-step instructions
+- Required test data
+- Expected result
+
+All test cases are written clearly, so they can be executed even by someone without prior QA experience, while still conforming to company standards.
+
+#### Example Test Case
+
+**TC-SEARCH-001: Search for "Fashion" keyword and verify complete results**
+
+**Test ID:** TC-SEARCH-001  
+**Title:** Search for "Fashion" keyword and verify complete results  
+**Priority:** High  
+**Type:** Functional / Positive
+
+**Preconditions:**
+
+- User has valid credentials for George banking platform
+- User is logged into the system
+- User is on the Overview page
+- Account contains transactions with "Fashion" category
+- Browser is Chrome/Firefox/Safari (latest version)
+
+**Test Data:**
+
+- Search keyword: "Fashion"
+- Expected category badge: "Fashion"
+
+**Test Steps:**
+
+| Step # | Action                                                                            | Expected Result                                      |
+| ------ | --------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| 1      | Navigate to the George banking platform Overview page                             | User is on the Overview page                         |
+| 2      | Locate and click the search trigger button (magnifying glass icon or search icon) | Search field is displayed                            |
+| 3      | Verify the search field is displayed and enabled                                  | Search field is visible and enabled for input        |
+| 4      | Type "Fashion" into the search field                                              | Text "Fashion" appears in the search field           |
+| 5      | Press Enter or click the search button to submit the search                       | Search is executed                                   |
+| 6      | Wait for search results to load (maximum 15 seconds)                              | Results appear within timeout period                 |
+| 7      | Verify the search results summary is displayed (e.g., "X transactions found")     | Summary count is visible and shows number of results |
+| 8      | Note the total number of transactions displayed in the summary                    | Summary count is recorded (e.g., "5 transactions")   |
+| 9      | Scroll down the transaction list to trigger infinite scroll loading               | Additional transactions start loading                |
+| 10     | Continue scrolling until no new transactions are loaded                           | All available transactions are loaded                |
+| 11     | Count the total number of loaded transaction items                                | Total count of loaded items is recorded              |
+| 12     | Verify that the loaded count matches the summary count                            | Loaded count equals summary count                    |
+| 13     | Click on the first transaction in the list to open details                        | Transaction details modal/overlay opens              |
+| 14     | Verify the transaction details modal/overlay is displayed                         | Modal is visible with transaction information        |
+| 15     | Verify the category badge displays "Fashion"                                      | Category badge shows "Fashion" text                  |
+| 16     | Close the transaction details (click X or outside modal)                          | Modal closes and returns to transaction list         |
+| 17     | Select a random transaction from the list (not the first one)                     | Random transaction is identified                     |
+| 18     | Open the random transaction details                                               | Random transaction details modal opens               |
+| 19     | Verify the category badge displays "Fashion" for the random transaction           | Random transaction also shows "Fashion" badge        |
+| 20     | Close the transaction details                                                     | Modal closes, test complete                          |
+
+**Expected Results:**
+
+- Search field opens successfully when trigger button is clicked
+- Search field accepts and displays the typed keyword "Fashion"
+- Search executes successfully after pressing Enter
+- Search results summary displays within 15 seconds
+- Summary shows a count greater than 0 (e.g., "5 transactions found")
+- Infinite scroll loads additional transactions when scrolling down
+- All available transactions are loaded (no more appear after full scroll)
+- Loaded transaction count exactly matches the summary count
+- First transaction opens successfully and displays details
+- First transaction has a category badge showing "Fashion"
+- Random transaction opens successfully and displays details
+- Random transaction has a category badge showing "Fashion"
+- All displayed transactions contain the "Fashion" category badge
+- No errors or crashes occur during the test execution
+
+**Postconditions:**
+
+- Search field can be cleared or reset
+- User remains on the Overview page
+- No data corruption or session issues
+
+**Notes:**
+
+- If summary count is 0, verify that "no results" message is displayed instead
+- If transactions fail to load via scroll, verify network connectivity and retry
+- Screenshot should be taken if any step fails for bug reporting
+
+#### Quick Manual Test Checklist
+
+For rapid validation of core search functionality, use this checklist:
+
+**Basic Search Functionality:**
+
+- [ ] Valid keyword search (e.g., "Fashion") returns results
+- [ ] Search results summary displays correct count
+- [ ] All matching transactions are displayed after scrolling
+- [ ] Transaction badges match the search keyword
+- [ ] Search field accepts input and displays typed text
+
+**Case Normalization:**
+
+- [ ] Uppercase search ("FASHION") works correctly
+- [ ] Mixed case search ("fAsHiOn") works correctly
+- [ ] Lowercase search ("fashion") works correctly
+- [ ] All case variations return the same results
+
+**Edge Cases:**
+
+- [ ] Empty search shows all transactions
+- [ ] Invalid keyword (e.g., "Fashionn") shows "no results" message
+- [ ] Special characters (#$%@) show "no results" message
+- [ ] Leading/trailing spaces are handled correctly
+- [ ] Multiple consecutive spaces are normalized
+
+**UI/UX Elements:**
+
+- [ ] Clear/reset button (X) appears when search has value
+- [ ] Clear button resets search and shows all transactions
+- [ ] Search trigger button opens/closes search field
+- [ ] Loading indicators appear during scroll
+- [ ] "No results" message displays correct title and text
+- [ ] Date presets (e.g., "Last Month") filter results correctly
+
+**Infinite Scroll:**
+
+- [ ] Scrolling loads additional transactions
+- [ ] All available results are loaded after full scroll
+- [ ] Loaded count matches summary count
+- [ ] No duplicate transactions appear
+- [ ] Scroll performance is acceptable (no lag/freezing)
+
+**Transaction Details:**
+
+- [ ] First transaction in list opens correctly
+- [ ] Random transaction from list opens correctly
+- [ ] Transaction details show correct category badge
+- [ ] Modal/overlay closes properly
+- [ ] Category badges match search keyword
+
+### 4. Manual Test Execution
+
+While executing the scenarios, I verify:
+
+- Search result correctness
+- Whether infinite scroll loads all available results
+- Stability when switching search terms rapidly
+- Consistency of UI components (badges, timestamps, layout)
+- Correct behavior of clear/reset features
+- Robustness across various edge inputs
+
+All observed issues are tracked for potential reporting.
+
+### 5. Documenting Findings (Bug Reporting)
+
+If a defect is identified, I document:
+
+- exact steps to reproduce
+- expected vs actual behavior
+- environment details
+- screenshots or videos if needed
+
+I then perform both **retest** and **focused regression** after fixes.
+
+This ensures high confidence in the stability and correctness of the search functionality.
