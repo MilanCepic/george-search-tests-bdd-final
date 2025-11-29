@@ -17,15 +17,24 @@ When("the user opens the search bar", () => {
 });
 
 When("the user types {string} into the search field and submits the search", (searchTerm) => {
-  cy.get('[data-cy="search-keyword"]').should("be.visible").and("not.be.disabled").clear().type(`${searchTerm}{enter}`);
+  cy.get('[data-cy="search-keyword"]').should("be.visible").and("not.be.disabled");
+  cy.get('[data-cy="search-keyword"]').clear({ force: true });
+  cy.get('[data-cy="search-keyword"]').type(`${searchTerm}{enter}`);
 });
 
 When("the user types {string} into the search field", (searchTerm) => {
-  cy.get('[data-cy="search-keyword"]').should("be.visible").clear().type(searchTerm);
+  cy.get('[data-cy="search-keyword"]').should("be.visible");
+  cy.get('[data-cy="search-keyword"]').clear({ force: true });
+  // Wait a bit for clear to complete and element to stabilize
+  cy.wait(100);
+  cy.get('[data-cy="search-keyword"]').type(searchTerm, { delay: 0 });
+  // Wait for normalization to complete
+  cy.wait(200);
 });
 
 When("the search field is empty", () => {
-  cy.get('[data-cy="search-keyword"]').should("be.visible").clear();
+  cy.get('[data-cy="search-keyword"]').should("be.visible");
+  cy.get('[data-cy="search-keyword"]').clear({ force: true });
 });
 
 When("the user triggers the search without entering a keyword", () => {
@@ -89,7 +98,8 @@ Then("the results count should be greater than zero", () => {
 
 // Search field verification
 Then("the search field should display {string}", (expectedValue) => {
-  cy.get('[data-cy="search-keyword"]').should("have.value", expectedValue);
+  // Re-query the element to avoid stale reference after normalization
+  cy.get('[data-cy="search-keyword"]', { timeout: 5000 }).should("have.value", expectedValue);
 });
 
 Then("the search field should be empty", () => {
