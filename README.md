@@ -12,50 +12,26 @@ The suite demonstrates stable automation of a real banking UI using BDD approach
 # Install dependencies
 npm install
 
-# Verify installation (will fail without credentials - see Setup Credentials below)
+# Setup credentials (required before running tests)
+cp cypress.env.example.json cypress.env.json
+# Edit cypress.env.json and add your test credentials
+# Contact project owner for test account credentials if needed
+
+# Verify installation
 npm test
 ```
 
 🔐 Setup Credentials
 
-**Why credentials are needed:** All tests require login to the George banking test environment. Without valid credentials, tests will fail at the login step with authentication errors.
+Before running tests, you need to configure your credentials:
 
-**What happens without credentials:** Tests will fail immediately when trying to log in, showing errors like "element not found" or "authentication failed" because the login command cannot execute without username and password.
-
-**Location:** The credentials file should be created in the project root directory: `cypress.env.json`
-
-**Steps to setup:**
-
-1. **Copy the example file:**
-
-   ```bash
-   # On macOS/Linux:
-   cp cypress.env.example.json cypress.env.json
-
-   # On Windows (Command Prompt):
-   copy cypress.env.example.json cypress.env.json
-
-   # On Windows (PowerShell):
-   Copy-Item cypress.env.example.json cypress.env.json
-   ```
-
-2. **Edit `cypress.env.json`** (located in project root) and replace placeholder values:
-
-   ```json
-   {
-     "george_username": "your_actual_username",
-     "george_password": "your_actual_password"
-   }
-   ```
-
-3. **Get test credentials:**
-
+1. Copy `cypress.env.example.json` to `cypress.env.json`
+2. Fill in your test credentials in `cypress.env.json`:
    - Contact the project owner for test account credentials
-   - Or use your own test account if you have access to `https://george.fat3.sparkasse.at` (FAT = Functional Acceptance Testing environment)
+   - Or use your own test account if you have access to the test environment
+3. The `cypress.env.json` file is already in `.gitignore` and will not be committed
 
-4. **Verify setup:** Run `npm test` - tests should now pass the login step.
-
-⚠️ **Security Note:** The `cypress.env.json` file is in `.gitignore` and will never be committed to the repository. Only `cypress.env.example.json` (with placeholder values) is tracked in git.
+⚠️ **Note:** Test credentials are required to run the tests. The test environment URL is `https://george.fat3.sparkasse.at` (FAT = Functional Acceptance Testing environment).
 
 ⸻
 

@@ -14,15 +14,11 @@ describe("Search input normalizes case into 'Fashion'", () => {
     it(`Typing "${term}" normalizes to "Fashion"`, () => {
       cy.get('[data-cy="search-trigger-button"]').click();
 
-      cy.get('[data-cy="search-keyword"]').should("be.visible");
-      cy.get('[data-cy="search-keyword"]').clear({ force: true });
-      cy.wait(100);
-      cy.get('[data-cy="search-keyword"]').type(term, { delay: 0 });
-      cy.wait(200);
+      cy.get('[data-cy="search-keyword"]').should("be.visible").clear().type(term);
 
       cy.get('[data-cy="search-keyword"]').should("have.value", "Fashion");
 
-      cy.get('[data-cy="search-keyword"]').clear({ force: true });
+      cy.get('[data-cy="search-keyword"]').clear();
     });
   });
 });

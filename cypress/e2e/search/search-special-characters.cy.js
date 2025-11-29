@@ -12,9 +12,7 @@ describe("Search with special characters returns no results", () => {
   it("Typing special characters '#$%@' shows no-results message", () => {
     cy.get('[data-cy="search-trigger-button"]').click();
 
-    cy.get('[data-cy="search-keyword"]').should("be.visible");
-    cy.get('[data-cy="search-keyword"]').clear({ force: true });
-    cy.get('[data-cy="search-keyword"]').type("#$%@{enter}");
+    cy.get('[data-cy="search-keyword"]').should("be.visible").clear().type("#$%@{enter}");
 
     cy.get('[data-cy="no-search-results"]', { timeout: 10000 }).should("be.visible");
 
