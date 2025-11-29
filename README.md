@@ -12,9 +12,26 @@ The suite demonstrates stable automation of a real banking UI using BDD approach
 # Install dependencies
 npm install
 
+# Setup credentials (required before running tests)
+cp cypress.env.example.json cypress.env.json
+# Edit cypress.env.json and add your test credentials
+# Contact project owner for test account credentials if needed
+
 # Verify installation
 npm test
 ```
+
+🔐 Setup Credentials
+
+Before running tests, you need to configure your credentials:
+
+1. Copy `cypress.env.example.json` to `cypress.env.json`
+2. Fill in your test credentials in `cypress.env.json`:
+   - Contact the project owner for test account credentials
+   - Or use your own test account if you have access to the test environment
+3. The `cypress.env.json` file is already in `.gitignore` and will not be committed
+
+⚠️ **Note:** Test credentials are required to run the tests. The test environment URL is `https://george.fat3.sparkasse.at` (FAT = Functional Acceptance Testing environment).
 
 ⸻
 
