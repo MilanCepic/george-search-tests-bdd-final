@@ -11,9 +11,7 @@ Feature: Search transactions by keyword "Fashion"
     When the user opens the search bar
     And the user types "Fashion" into the search field and submits the search
     Then the search results summary should be visible
-    And the results count should match the number of loaded transactions
-
-    When all transaction results are loaded by scrolling
+    And all transaction results are loaded by scrolling
     Then the loaded transactions count should equal the expected total count
 
     When the user opens the first transaction in the list

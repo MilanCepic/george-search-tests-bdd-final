@@ -12,7 +12,9 @@ describe("Transaction Search - Fashion", () => {
   it("Loads all transactions, verifies exact count, checks first & random details", () => {
     cy.get('[data-cy="search-trigger-button"]').should("be.visible").click();
 
-    cy.get('[data-cy="search-keyword"]').should("be.visible").and("not.be.disabled").clear().type("Fashion{enter}");
+    cy.get('[data-cy="search-keyword"]').should("be.visible").and("not.be.disabled");
+    cy.get('[data-cy="search-keyword"]').clear();
+    cy.get('[data-cy="search-keyword"]').type("Fashion{enter}");
 
     cy.get('[data-cy="transactions-search-summary"]', { timeout: 15000 })
       .invoke("text")

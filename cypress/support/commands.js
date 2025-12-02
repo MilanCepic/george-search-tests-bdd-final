@@ -27,15 +27,18 @@
 Cypress.Commands.add("loginGeorge", () => {
   cy.visit("https://george.fat3.sparkasse.at");
 
+  const username = Cypress.env("george_username");
+  const password = Cypress.env("george_password");
+
   // USERNAME
-  cy.origin("https://login.fat.sparkasse.at", () => {
-    cy.get('input[name="j_username"]').should("be.visible").type("101177144");
+  cy.origin("https://login.fat.sparkasse.at", { args: { username } }, ({ username }) => {
+    cy.get('input[name="j_username"]').should("be.visible").type(username);
     cy.get("#submitButton").click();
   });
 
   // PASSWORD
-  cy.origin("https://login.fat.sparkasse.at", () => {
-    cy.get('input[name="j_password"]').should("be.visible").type("1111111");
+  cy.origin("https://login.fat.sparkasse.at", { args: { password } }, ({ password }) => {
+    cy.get('input[name="j_password"]').should("be.visible").type(password);
     cy.get("#submitButton").click();
   });
 

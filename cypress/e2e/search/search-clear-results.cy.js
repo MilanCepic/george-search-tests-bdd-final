@@ -12,7 +12,9 @@ describe("Clear search resets results", () => {
   it("Searches for 'Fees', then clears the search and verifies the results reset", () => {
     cy.get('[data-cy="search-trigger-button"]').click();
 
-    cy.get('[data-cy="search-keyword"]').should("be.visible").clear().type("Fees{enter}");
+    cy.get('[data-cy="search-keyword"]').should("be.visible");
+    cy.get('[data-cy="search-keyword"]').clear();
+    cy.get('[data-cy="search-keyword"]').type("Fees{enter}");
 
     cy.get('[data-cy="transactions-search-summary"]', { timeout: 15000 })
       .should("be.visible")

@@ -13,19 +13,27 @@ Given("the user is on the Overview page", () => {
 
 // Search bar interactions
 When("the user opens the search bar", () => {
-  cy.get('[data-cy="search-trigger-button"]').should("be.visible").click();
+  cy.get('[data-cy="search-trigger-button"]').should("be.visible");
+  cy.get('[data-cy="search-trigger-button"]').click();
+  // Wait for search field to be ready
+  cy.get('[data-cy="search-keyword"]').should("be.visible").and("not.be.disabled");
 });
 
 When("the user types {string} into the search field and submits the search", (searchTerm) => {
-  cy.get('[data-cy="search-keyword"]').should("be.visible").and("not.be.disabled").clear().type(`${searchTerm}{enter}`);
+  cy.get('[data-cy="search-keyword"]').should("be.visible").and("not.be.disabled");
+  cy.get('[data-cy="search-keyword"]').clear();
+  cy.get('[data-cy="search-keyword"]').type(`${searchTerm}{enter}`);
 });
 
 When("the user types {string} into the search field", (searchTerm) => {
-  cy.get('[data-cy="search-keyword"]').should("be.visible").clear().type(searchTerm);
+  cy.get('[data-cy="search-keyword"]').should("be.visible");
+  cy.get('[data-cy="search-keyword"]').clear();
+  cy.get('[data-cy="search-keyword"]').type(searchTerm);
 });
 
 When("the search field is empty", () => {
-  cy.get('[data-cy="search-keyword"]').should("be.visible").clear();
+  cy.get('[data-cy="search-keyword"]').should("be.visible");
+  cy.get('[data-cy="search-keyword"]').clear();
 });
 
 When("the user triggers the search without entering a keyword", () => {
@@ -38,7 +46,8 @@ When("the user clicks the clear search button", () => {
 
 // Date preset interactions
 When("the user clicks into the search field to open the date presets", () => {
-  cy.get('[data-cy="search-keyword"]').should("be.visible").click();
+  cy.get('[data-cy="search-keyword"]').should("be.visible");
+  cy.get('[data-cy="search-keyword"]').click();
 });
 
 When('the user selects the {string} preset', (presetName) => {
@@ -58,33 +67,37 @@ Then("the search results summary should not be visible", () => {
   cy.get('[data-cy="transactions-search-summary"]').should("not.exist");
 });
 
-Then("the results count should match the number of loaded transactions", () => {
-  cy.get('[data-cy="transactions-search-summary"]', { timeout: 15000 })
+// Helper function to get results count from summary
+const getResultsCount = () => {
+  return cy.get('[data-cy="transactions-search-summary"]', { timeout: 15000 })
     .invoke("text")
-    .then((text) => {
-      const totalTransactions = parseInt(text);
-      cy.loadAllTransactions().then((loadedCount) => {
-        expect(loadedCount).to.eq(totalTransactions);
-      });
+    .then((text) => parseInt(text));
+};
+
+// Helper function to verify loaded transactions match expected count
+const verifyLoadedTransactionsMatchCount = () => {
+  getResultsCount().then((totalTransactions) => {
+    cy.loadAllTransactions().then((loadedCount) => {
+      expect(loadedCount).to.eq(totalTransactions);
     });
+  });
+};
+
+Then("the results count should match the number of loaded transactions", () => {
+  verifyLoadedTransactionsMatchCount();
 });
 
 Then("the results count should be greater than {int}", (count) => {
-  cy.get('[data-cy="transactions-search-summary"]', { timeout: 15000 })
-    .invoke("text")
-    .then((text) => {
-      const totalTransactions = parseInt(text);
-      expect(totalTransactions).to.be.greaterThan(count);
-    });
+  getResultsCount().then((totalTransactions) => {
+    expect(totalTransactions).to.be.greaterThan(count);
+  });
 });
 
 Then("the results count should be greater than zero", () => {
-  cy.get('[data-cy="transactions-search-summary"]', { timeout: 15000 })
-    .invoke("text")
-    .then((text) => {
-      const totalTransactions = parseInt(text);
-      expect(totalTransactions).to.be.greaterThan(0);
-    });
+  // Reuse the parameterized step logic with 0 as the count
+  getResultsCount().then((totalTransactions) => {
+    expect(totalTransactions).to.be.greaterThan(0);
+  });
 });
 
 // Search field verification
@@ -101,15 +114,10 @@ When("all transaction results are loaded by scrolling", () => {
   cy.loadAllTransactions();
 });
 
+// This step is an alias for "the results count should match the number of loaded transactions"
+// to maintain backward compatibility with existing feature files
 Then("the loaded transactions count should equal the expected total count", () => {
-  cy.get('[data-cy="transactions-search-summary"]', { timeout: 15000 })
-    .invoke("text")
-    .then((text) => {
-      const totalTransactions = parseInt(text);
-      cy.loadAllTransactions().then((loadedCount) => {
-        expect(loadedCount).to.eq(totalTransactions);
-      });
-    });
+  verifyLoadedTransactionsMatchCount();
 });
 
 // Transaction details verification
@@ -148,16 +156,21 @@ Then('the message text should be {string}', (messageText) => {
   cy.contains(messageText, { timeout: 10000 }).should("be.visible");
 });
 
-// Full list verification
-Then("the full list of transactions should be displayed", () => {
+// Full list verification - all three steps use the same logic
+// Helper function to avoid code duplication
+const verifyTransactionsExist = () => {
   cy.get(".g-button-collapsible", { timeout: 10000 }).should("have.length.greaterThan", 0);
+};
+
+Then("the full list of transactions should be displayed", () => {
+  verifyTransactionsExist();
 });
 
 Then("at least one transaction should be visible", () => {
-  cy.get(".g-button-collapsible", { timeout: 10000 }).should("have.length.greaterThan", 0);
+  verifyTransactionsExist();
 });
 
 Then("at least one transaction should be displayed in the list", () => {
-  cy.get(".g-button-collapsible", { timeout: 10000 }).should("have.length.greaterThan", 0);
+  verifyTransactionsExist();
 });
 

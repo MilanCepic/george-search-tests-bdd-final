@@ -143,3 +143,4 @@ cypress/screenshots/
 cypress/videos/
 cypress/downloads/
 cypress/.nyc_output/
+cypress.env.json

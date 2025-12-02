@@ -6,15 +6,67 @@ The suite demonstrates stable automation of a real banking UI using BDD approach
 
 ⸻
 
-📦 Installation
+## 🚀 Quick Start
 
-```bash
-# Install dependencies
-npm install
+1. **Install dependencies:**
 
-# Verify installation
-npm test
-```
+   ```bash
+   npm install
+   ```
+
+2. **Setup credentials (required):**
+
+   ```bash
+   cp cypress.env.example.json cypress.env.json
+   # Edit cypress.env.json and add your test credentials
+   # Contact project owner for test account credentials if needed
+   ```
+
+3. **Verify installation:**
+   ```bash
+   npm test
+   ```
+
+⸻
+
+🔐 Setup Credentials (Required Before Running Tests)
+
+Before running tests, you need to configure your credentials. All tests require login to the George banking test environment (`https://george.fat3.sparkasse.at` - FAT = Functional Acceptance Testing environment).
+
+**Steps to setup:**
+
+1. **Copy the example file:**
+
+   ```bash
+   # On macOS/Linux:
+   cp cypress.env.example.json cypress.env.json
+
+   # On Windows (Command Prompt):
+   copy cypress.env.example.json cypress.env.json
+
+   # On Windows (PowerShell):
+   Copy-Item cypress.env.example.json cypress.env.json
+   ```
+
+2. **Edit `cypress.env.json`** (located in project root) and replace placeholder values:
+
+   ```json
+   {
+     "george_username": "your_actual_username",
+     "george_password": "your_actual_password"
+   }
+   ```
+
+3. **Get test credentials:**
+
+   - Contact the project owner for test account credentials
+   - Or use your own test account if you have access to the test environment
+
+4. **Verify setup:** Run `npm test` - tests should now pass the login step.
+
+⚠️ **Security Note:** The `cypress.env.json` file is in `.gitignore` and will never be committed to the repository. Only `cypress.env.example.json` (with placeholder values) is tracked in git.
+
+**What happens without credentials:** Tests will fail immediately when trying to log in, showing errors like "element not found" or "authentication failed" because the login command cannot execute without username and password.
 
 ⸻
 
@@ -60,13 +112,14 @@ cypress/
 │ └── example.json
 │
 cypress.config.js
+cypress.env.example.json
 package.json
 README.md
 ```
 
 🔐 Session Login (Reusable)
 
-Login is implemented once in commands.js, reused via cy.session():
+Login is implemented once in `commands.js` and uses credentials from `cypress.env.json` via `Cypress.env()`. The login is reused via `cy.session()`:
 
 ```bash
 cy.session("george-session", () => {cy.loginGeorge();});
@@ -77,6 +130,8 @@ Additional helper:
 ```bash
 cy.visitOverview();
 ```
+
+**Note:** Credentials are loaded from environment variables (`Cypress.env("george_username")` and `Cypress.env("george_password")`) for security. See [Setup Credentials](#-setup-credentials-required-before-running-tests) section above.
 
 ⭐ Main Automated Scenario (Required by Assignment)
 
@@ -103,12 +158,14 @@ The scenario is written in Gherkin syntax and executed via Cucumber preprocessor
 
 ▶️ Running the Tests
 
-```bash
-# Open Cypress UI
-npm run test:open
+**Important:** Make sure you have completed the [Setup Credentials](#-setup-credentials-required-before-running-tests) step before running tests.
 
+```bash
 # Run all BDD feature tests (recommended)
 npm test
+
+# Open Cypress UI
+npm run test:open
 
 # Run full suite (includes legacy .cy.js tests)
 npm run test:headless
